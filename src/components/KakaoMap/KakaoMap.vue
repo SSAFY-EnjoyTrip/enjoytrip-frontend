@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 const KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
-const map = ref(null);
+let map = null;
 
 const loadMap = () => {
   const container = document.querySelector('#map');
@@ -11,7 +11,7 @@ const loadMap = () => {
     level: 9,
   };
 
-  map.value = new window.kakao.maps.Map(container, options);
+  map = new window.kakao.maps.Map(container, options);
 };
 
 const loadScript = () => {
