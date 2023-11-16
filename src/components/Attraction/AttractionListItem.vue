@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import router from '@/router/index';
 
 const props = defineProps({
   attraction: {
@@ -9,6 +10,15 @@ const props = defineProps({
 });
 
 const attraction = ref(props.attraction);
+
+const createMarkerHandler = () => {
+  router.push({
+    name: 'plans',
+    state: {
+      attraction: { ...attraction.value },
+    },
+  });
+};
 </script>
 
 <template>
@@ -35,6 +45,7 @@ const attraction = ref(props.attraction);
         icon="place"
         class="absolute"
         style="top: 0; right: 12px; transform: translateY(-50%)"
+        @click="createMarkerHandler"
       />
 
       <div class="row no-wrap items-center q-mt-md">
