@@ -2,6 +2,9 @@
 import { onMounted } from 'vue';
 
 const KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
+
+const { attraction } = history.state;
+
 let map = null;
 
 const loadMap = () => {
@@ -23,9 +26,27 @@ const loadScript = () => {
   document.head.appendChild(script);
 };
 
+const addMarker = () => {
+  if(attraction) {
+    const lat = attraction.latitude;
+    const lng = attraction.longitude;
+
+    const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+
+    const marker = new window.kakao.maps.Marker({
+      position: markerPosition,
+    });
+
+    marker.setMap(map);
+    map.setCenter(markerPosition);
+  }
+}
+
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
+    console.log('mounted');
     loadMap();
+    addMarker();
   } else {
     loadScript();
   }
