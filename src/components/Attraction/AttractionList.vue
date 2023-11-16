@@ -3,15 +3,17 @@ import { ref, defineAsyncComponent } from 'vue';
 import axios from 'axios';
 import InfiniteLoading from 'v3-infinite-loading';
 
+const AttractionListItem = defineAsyncComponent(() =>
+  import('./AttractionListItem.vue')
+);
+
 const attractions = ref([]);
 let page = 1;
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const LIMIT = import.meta.env.VITE_ATTRACTION_LIST_LIMIT;
 
-const AttractionListItem = defineAsyncComponent(() =>
-  import('./AttractionListItem.vue')
-);
+
 
 const load = async ($state) => {
   try {
@@ -32,7 +34,7 @@ const load = async ($state) => {
 };
 </script>
 
-<template>
+<template>  
   <div class="row q-col-gutter-lg">
     <div
       v-for="attraction in attractions"
