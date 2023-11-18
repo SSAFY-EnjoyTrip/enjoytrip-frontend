@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import router from '@/router/index';
+import { ref, inject } from 'vue';
 
 const props = defineProps({
   attraction: {
@@ -9,16 +8,12 @@ const props = defineProps({
   },
 });
 
+const selectedAttraction = inject('selectedAttraction');
 const attraction = ref(props.attraction);
 
-const createMarkerHandler = () => {
-  router.push({
-    name: 'plans',
-    state: {
-      attraction: { ...attraction.value },
-    },
-  });
-};
+const setAttraction = () => {
+  selectedAttraction.value = attraction.value;
+}
 </script>
 
 <template>
@@ -45,7 +40,7 @@ const createMarkerHandler = () => {
         icon="place"
         class="absolute"
         style="top: 0; right: 12px; transform: translateY(-50%)"
-        @click="createMarkerHandler"
+        @click="setAttraction"
       />
 
       <div class="row no-wrap items-center q-mt-md">
@@ -59,9 +54,6 @@ const createMarkerHandler = () => {
       <div class="text-subtitle1">
         {{ attraction.addr1 }}
       </div>
-      <!-- <div class="text-caption text-grey q-ml-sm ellipsis">
-        {{ attraction.addr2 }}
-      </div> -->
     </q-card-section>
   </q-card>
 </template>
