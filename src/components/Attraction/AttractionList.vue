@@ -1,37 +1,13 @@
 <script setup>
-import { ref, defineAsyncComponent } from 'vue';
-import axios from 'axios';
+import { defineAsyncComponent, inject } from 'vue';
 import InfiniteLoading from 'v3-infinite-loading';
 
 const AttractionListItem = defineAsyncComponent(() =>
   import('./AttractionListItem.vue')
 );
 
-const attractions = ref([]);
-let page = 1;
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const LIMIT = import.meta.env.VITE_ATTRACTION_LIST_LIMIT;
-
-
-
-const load = async ($state) => {
-  try {
-    const res = await axios.get(
-      `${BASE_URL}/attractions/list?page=${page}&limit=${LIMIT}`
-    );
-    const json = await res.data.attractions;
-
-    if (json.length < LIMIT) $state.complete();
-    else {
-      attractions.value.push(...json);
-      $state.loaded();
-    }
-    page++;
-  } catch (error) {
-    $state.error();
-  }
-};
+const attractions = inject('attractions');
+const getAttractions = inject('getAttractions');
 </script>
 
 <template>  
@@ -44,7 +20,7 @@ const load = async ($state) => {
       <AttractionListItem :attraction="attraction" />
     </div>
   </div>
-  <InfiniteLoading @infinite="load" />
+  <InfiniteLoading @infinite="getAttractions" />
 
   <q-page-scroller position="bottom-right" :scroll-offset="0" :offset="[0, 18]">
     <q-btn fab icon="keyboard_arrow_up" color="black" />
