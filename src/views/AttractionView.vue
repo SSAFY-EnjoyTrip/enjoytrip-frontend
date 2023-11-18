@@ -31,9 +31,12 @@ const getAttractions = async ($state) => {
     );
     const json = await res.data.attractions;
 
-    if (json.length < LIMIT) $state.complete();
+    attractions.value.push(...json);
+
+    if (json.length < LIMIT) {
+      $state.complete();
+    }
     else {
-      attractions.value.push(...json);
       $state.loaded();
     }
     page.value++;
