@@ -9,8 +9,8 @@
 
       <q-space />
 
-      <q-route-tab to="" label="Login" />
-      <q-route-tab to="" label="Sign in" />
+      <q-route-tab to="login" label="Login" />
+      <q-route-tab to="signup" label="Sign up" />
     </q-tabs>
   </q-header>
 </template>
