@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AttractionView from '../views/AttractionView.vue';
 import PlanView from '../views/PlanView.vue';
+import LoginView from '../views/LoginView.vue';
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     name: 'plans',
     component: PlanView,
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView,
+  }
 ]
 
 const router = createRouter({
