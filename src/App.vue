@@ -1,13 +1,17 @@
 <script setup>
+import { useRoute } from 'vue-router';
+
 import TheNavbar from './layout/TheNavbar.vue';
+
+const route = useRoute();
 </script>
 
 <template>
-  <div class="q-pa-md">
+  <div class="">
   <q-layout view="lHr Lpr lFr">
-    <TheNavbar />
+    <TheNavbar v-if="route.path !== '/login'"/>
     <q-page-container>
-      <q-page padding>
+      <q-page class="q-px-xl">
         <router-view />
       </q-page>
     </q-page-container>
