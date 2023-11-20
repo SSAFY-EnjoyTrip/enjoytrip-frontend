@@ -2,14 +2,21 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+
 import { useMemberStore } from '@/stores/member';
+import { useMenuStore } from '../stores/menu';
 
 const router = useRouter();
+const $q = useQuasar();
 
 const memberStore = useMemberStore();
+const menuStore = useMenuStore();
 
 const { isLogin } = storeToRefs(memberStore);
 const { userLogin, getUserInfo } = memberStore;
+
+const { changeMenuState } = menuStore;
 
 const loginUser = ref({
   email: 'ssafy.com',
@@ -17,14 +24,18 @@ const loginUser = ref({
 });
 
 const login = async () => {
-  console.log('login ing!!!! !!!------------------------------------------');
   await userLogin(loginUser.value);
   let token = sessionStorage.getItem('accessToken');
-  console.log('111. ', token);
-  console.log('isLogin: ', isLogin);
-  if (isLogin) {
-    console.log('로그인 성공아닌가???');
+
+  if (isLogin.value) {
+    changeMenuState();
     getUserInfo(token, loginUser.value.email);
+    $q.notify({
+      type: 'positive',
+      message: '로그인에 성공하였습니다.',
+      color: 'primary',
+      timeout: 1000,
+    });
     router.push('/');
   }
 };
