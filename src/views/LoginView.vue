@@ -1,27 +1,55 @@
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
+import { useMemberStore } from '@/stores/member';
 
-const email = ref('');
-const password = ref('');
+const router = useRouter();
+
+const memberStore = useMemberStore();
+
+const { isLogin } = storeToRefs(memberStore);
+const { userLogin, getUserInfo } = memberStore;
+
+const loginUser = ref({
+  email: 'ssafy.com',
+  password: '1234',
+});
+
+const login = async () => {
+  console.log('login ing!!!! !!!------------------------------------------');
+  await userLogin(loginUser.value);
+  let token = sessionStorage.getItem('accessToken');
+  console.log('111. ', token);
+  console.log('isLogin: ', isLogin);
+  if (isLogin) {
+    console.log('로그인 성공아닌가???');
+    getUserInfo(token, loginUser.value.email);
+    router.push('/');
+  }
+};
 </script>
 
 <template>
-  <q-page
-    class="row justify-center items-center"
-  >
+  <q-page class="row justify-center items-center">
     <div class="column">
       <div class="row flex-center">
         <h5 class="text-h4 text-black q-my-xl">Enjoy Trip</h5>
       </div>
       <div class="row">
-        <q-card square bordered class="q-pa-lg shadow-1" style="width: 400px; max-width: 400px">
+        <q-card
+          square
+          bordered
+          class="q-pa-lg shadow-1"
+          style="width: 400px; max-width: 400px"
+        >
           <q-card-section>
             <q-form class="q-gutter-md">
               <q-input
                 square
                 filled
                 clearable
-                v-model="email"
+                v-model="loginUser.email"
                 type="email"
                 label="이메일"
               />
@@ -29,7 +57,7 @@ const password = ref('');
                 square
                 filled
                 clearable
-                v-model="password"
+                v-model="loginUser.password"
                 type="password"
                 label="비밀번호"
               />
@@ -42,6 +70,7 @@ const password = ref('');
               size="lg"
               class="full-width"
               label="로그인"
+              @click="login"
             />
           </q-card-actions>
         </q-card>
@@ -52,7 +81,6 @@ const password = ref('');
           <span>|</span>
           <q-route-tab to="">회원가입</q-route-tab>
         </q-tabs>
-        
       </div>
     </div>
   </q-page>
