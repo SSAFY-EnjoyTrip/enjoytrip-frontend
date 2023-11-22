@@ -25,7 +25,7 @@ const model = ref(options.value[0]);
 
     <div class="q-my-xl">
       <div class="text-h5">Top Monthly</div>
-      <div class="row">hhh
+      <div class="row">
         <PlanCard class="col" v-for="n in 4" :key="n" />
       </div>
       <div class="row">
@@ -38,7 +38,7 @@ const model = ref(options.value[0]);
       <div class="row">
         <PlanCard class="col" v-for="n in 4" :key="n" />
       </div>
-      <div class="row">h
+      <div class="row">
         <PlanCard class="col" v-for="n in 4" :key="n" />
       </div>
     </div>
