@@ -31,32 +31,44 @@ onMounted(() => {
   getSido();
 });
 
-watch((selectedSido), (newSido) => {
+watch(selectedSido, (newSido) => {
   selectedGugun.value = null;
   getGugun(newSido);
 });
 </script>
 
 <template>
-  <q-select
-    v-model="selectedSido"
-    :options="sidoList"
-    label="시/도를 선택하세요"
-    emit-value
-    map-options
-  />
-  <q-select
-    v-model="selectedGugun"
-    :options="gugunList"
-    label="구/군을 선택하세요"
-    emit-value
-    map-options
-  />
-  <q-input v-model="keyword" label="찾고싶은 장소를 입력하세요">
-    <template #append>
-      <q-icon name="search" class="cursor-pointer" />
-    </template>
-  </q-input>
+  <div class="q-my-lg container">
+    <div class="row justify-center">
+      <q-select
+        v-model="selectedSido"
+        :options="sidoList"
+        label="시/도를 선택하세요"
+        emit-value
+        map-options
+        class="col-4 q-mr-xl"
+      />
+      <q-select
+        v-model="selectedGugun"
+        :options="gugunList"
+        label="구/군을 선택하세요"
+        emit-value
+        map-options
+        class="col-4 q-ml-xl"
+      />
+    </div>
+    <div class="row justify-center">
+      <q-input
+        v-model="keyword"
+        label="찾고싶은 장소를 입력하세요"
+        class="col-7"
+      >
+        <template #append>
+          <q-icon name="search" class="cursor-pointer" />
+        </template>
+      </q-input>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>
