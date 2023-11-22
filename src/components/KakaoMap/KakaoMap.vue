@@ -5,8 +5,10 @@ const KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
 const mapContainer = ref(null);
 const map = ref(null);
 const marker = ref(null);
+const markers = ref([]);
 
 const selectedAttraction = inject('selectedAttraction');
+const attractionList = inject('attractionList');
 
 const loadScript = () => {
   return new Promise((resolve, reject) => {
@@ -20,8 +22,8 @@ const loadScript = () => {
 
 const loadMap = () => {
   const options = {
-    center: new kakao.maps.LatLng(37.541, 126.986),
-    level: 9,
+    center: new kakao.maps.LatLng(36.6424341, 127.4890319),
+    level: 12,
   };
   /* global kakao */
   map.value = new kakao.maps.Map(mapContainer.value, options);
@@ -44,9 +46,54 @@ const addMarker = (latitude, longitude) => {
   map.value.panTo(position);
 }
 
+const deleteMarkers = () => {
+  if(markers.value.length <= 0) {
+    return;
+  }
+
+  markers.value.forEach((marker) => {
+    marker.setMap(null);
+  });
+
+  markers.value = [];
+};
+
+const addMarkers = () => {
+  if(attractionList.value.length <= 0) {
+    return;
+  }
+
+  attractionList.value.forEach((attraction) => {
+    const { latitude, longitude, title } = attraction;
+    const position = new kakao.maps.LatLng(latitude, longitude);
+
+    const marker = new kakao.maps.Marker({
+      position,
+      title,
+    });
+
+    kakao.maps.event.addListener(marker, 'click', () => map.value.panTo(position));
+    markers.value.push(marker);
+  });
+};
+
+const setMarkers = () => {
+  markers.value.forEach((marker) => {
+    marker.setMap(map.value);
+  });
+};
+
 watch((selectedAttraction), (newAttraction) => {
   const { latitude, longitude } = newAttraction;
   addMarker(latitude, longitude);
+});
+
+watch((attractionList), () => {
+  deleteMarkers();
+  addMarkers();
+  setMarkers();
+
+  console.log('markers after watch: ', markers.value);
 });
 
 onMounted(async () => {
