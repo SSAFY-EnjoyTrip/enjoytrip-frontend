@@ -1,11 +1,13 @@
 <script setup>
 import { ref, provide, inject } from 'vue';
+import draggable from 'vuedraggable';
 
 import PlanRegistDetailListItem from './PlanRegistDetailListItem.vue';
 import AttractionView from '@/views/AttractionView.vue';
 
 const layout = ref(false);
 const attractionList = inject('attractionList');
+// const drag = ref(false);
 
 const deleteAttractionHandler = (contentId) => {
   attractionList.value = attractionList.value.filter(
@@ -35,13 +37,31 @@ provide('isPopup', true);
   </q-dialog>
 
   <div class="text-h5 q-mt-xl">관광지 목록</div>
-  <q-btn label="관광지 추가하기" color="primary" @click="layout = true" class="full-width q-my-lg"/>
-  <PlanRegistDetailListItem
+  <q-btn
+    label="관광지 추가하기"
+    color="primary"
+    @click="layout = true"
+    class="full-width q-my-lg"
+  />
+  <draggable
+    v-model="attractionList"
+    item-key="contentId"
+    @change="console.log(attractionList)"
+  >
+    <template #item="{ element }">
+      <PlanRegistDetailListItem
+        :key="contentId"
+        :attraction="element"
+        @onDelete="deleteAttractionHandler"
+      />
+    </template>
+  </draggable>
+  <!-- <PlanRegistDetailListItem
     v-for="attraction in attractionList"
     :key="attraction.contentId"
     :attraction="attraction"
     @onDelete="deleteAttractionHandler"
-  />
+  /> -->
 </template>
 
 <style scoped></style>
