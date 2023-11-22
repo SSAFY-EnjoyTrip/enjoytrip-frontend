@@ -1,8 +1,10 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMenuStore } from '../stores/menu';
 import { useMemberStore } from '../stores/member';
+
+import { useRouter } from 'vue-router';
 
 const menuStore = useMenuStore();
 const memberStore = useMemberStore();
@@ -11,10 +13,20 @@ const { userInfo } = storeToRefs(memberStore);
 const { menuList } = storeToRefs(menuStore);
 
 const { userLogout } = memberStore;
+const { changeMenuState } = menuStore;
+
+const router = useRouter();
+const logout = ref(false);
 
 const visibleMenuList = computed(() => {
   return menuList.value.filter((menu) => menu.show === true);
 });
+
+const logoutHandler = async () => {
+  await userLogout(userInfo.value.id);
+  changeMenuState();
+  await router.push('/');
+};
 </script>
 
 <template>
@@ -33,8 +45,7 @@ const visibleMenuList = computed(() => {
             <q-route-tab
               :key="menu.name"
               :label="menu.name"
-              :to="'/'"
-              @click="userLogout(userInfo.value.id)"
+              @click="logout = true"
             />
           </template>
           <template v-else>
@@ -48,6 +59,20 @@ const visibleMenuList = computed(() => {
       </div>
     </q-tabs>
   </q-header>
+
+  <q-dialog v-model="logout" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <!-- <q-avatar icon="caution" color="primary" text-color="white" /> -->
+          <span class="q-ml-sm">로그아웃 하시겠습니까?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="확인" color="primary" v-close-popup @click="logoutHandler"/>
+          <q-btn flat label="취소" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <style scoped></style>
