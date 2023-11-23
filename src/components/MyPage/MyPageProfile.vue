@@ -13,6 +13,7 @@ const form = ref(null);
 const userInfo = inject('userInfo');
 const getUserInfo = inject('getUserInfo');
 
+const profileImg = ref(userInfo.value.profileImg ?? 0);
 const email = ref(userInfo.value.email);
 const name = ref(userInfo.value.name);
 const nickname = ref(userInfo.value.nickname);
@@ -57,7 +58,7 @@ const onSubmit = async (e) => {
 
   if (isFormValid && doubleCheck) {
     await axios.put(`${BASE_URL}/users/info`, {
-      profileImg: userInfo.value.profileImg === null ? '' : userInfo.value.profileImg,
+      profileImg: profileImg.value,
       id: userInfo.value.id,
       email: email.value,
       password: password.value,
@@ -76,16 +77,40 @@ const onSubmit = async (e) => {
 
     console.log(userInfo.value);
     // router.push({ name: 'login' });
-  }
-  else {
+  } else {
     console.log('유효성 실패');
   }
 };
+
+const changeImageHandler = () => {
+  profileImg.value = Math.floor(Math.random() * 25) + 1;
+
+  console.log(profileImg.value);
+};
+
+console.log(profileImg.value);
 </script>
 
 <template>
   <q-page class="row justify-center">
-    <q-skeleton type="QAvatar" size="400px" class="q-mb-xl"/>
+    <!-- <q-skeleton type="QAvatar" size="400px" class="q-mb-xl"/> -->
+    <q-avatar
+      size="400px"
+      class="q-mb-xl"
+      rounded="true"
+      style="border: 1px solid rgba(0, 0, 0, 0.15)"
+      >
+      <q-icon v-if="profileImg === 0" name="person" color="grey" />
+      <q-img v-else :src="`src/assets/profiles/${profileImg}.svg`" class="full-height"/>
+      <q-icon
+        name="change_circle"
+        class="absolute-bottom-right z-top cursor-pointer"
+        size="50px"
+        color="grey-4"
+        @click="changeImageHandler"
+      />
+    </q-avatar>
+
     <div class="column">
       <!-- <div class="row flex-center">
         <h5 class="text-h4 text-black q-my-xl">회원정보 수정</h5>
