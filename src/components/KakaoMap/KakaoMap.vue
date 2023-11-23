@@ -9,6 +9,7 @@ const markers = ref([]);
 
 const selectedAttraction = inject('selectedAttraction');
 const attractionList = inject('attractionList');
+const parentView = inject('parentView', null);
 
 const loadScript = () => {
   return new Promise((resolve, reject) => {
@@ -31,7 +32,7 @@ const loadMap = () => {
 
 const addMarker = (latitude, longitude) => {
   // 이전 마커가 있을 경우 지우기
-  if(marker.value) {
+  if (marker.value) {
     marker.value.setMap(null);
   }
 
@@ -44,10 +45,10 @@ const addMarker = (latitude, longitude) => {
 
   // 마커 위치로 이동
   map.value.panTo(position);
-}
+};
 
 const deleteMarkers = () => {
-  if(markers.value.length <= 0) {
+  if (markers.value.length <= 0) {
     return;
   }
 
@@ -59,7 +60,7 @@ const deleteMarkers = () => {
 };
 
 const addMarkers = () => {
-  if(attractionList.value.length <= 0) {
+  if (attractionList.value.length <= 0) {
     return;
   }
 
@@ -72,7 +73,9 @@ const addMarkers = () => {
       title,
     });
 
-    kakao.maps.event.addListener(marker, 'click', () => map.value.panTo(position));
+    kakao.maps.event.addListener(marker, 'click', () =>
+      map.value.panTo(position)
+    );
     markers.value.push(marker);
   });
 };
@@ -83,18 +86,20 @@ const setMarkers = () => {
   });
 };
 
-watch((selectedAttraction), (newAttraction) => {
+watch(selectedAttraction, (newAttraction) => {
   const { latitude, longitude } = newAttraction;
   addMarker(latitude, longitude);
 });
 
-watch((attractionList), () => {
-  deleteMarkers();
-  addMarkers();
-  setMarkers();
+if (parentView !== 'PlanDetailView') {
+  watch(attractionList, () => {
+    deleteMarkers();
+    addMarkers();
+    setMarkers();
 
-  console.log('markers after watch: ', markers.value);
-});
+    console.log('markers after watch: ', markers.value);
+  });
+}
 
 onMounted(async () => {
   try {
@@ -105,6 +110,11 @@ onMounted(async () => {
       });
     });
     loadMap();
+
+    if (parentView === 'PlanDetailView') {
+      addMarkers();
+      setMarkers();
+    }
   } catch (error) {
     console.error('Failed to load Kakao Map API:', error);
   }
@@ -112,7 +122,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="map" style="width:100%;height:400px;" ref="mapContainer"></div>
+  <div id="map" style="width: 100%; height: 400px" ref="mapContainer"></div>
 </template>
 
 <style scoped></style>
