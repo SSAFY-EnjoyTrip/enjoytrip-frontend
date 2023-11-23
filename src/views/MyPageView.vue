@@ -6,7 +6,6 @@ import { useMemberStore } from '../stores/member';
 
 import MyPageProfile from '../components/Mypage/MyPageProfile.vue';
 import MyPageTab from '../components/MyPage/MyPageTab.vue';
-import KakaoMap from '../components/KakaoMap/KakaoMap.vue';
 
 const memberStore = useMemberStore();
 const selectedPlan = ref(null);
@@ -26,10 +25,7 @@ provide('selectedPlan', selectedPlan);
       <MyPageProfile />
     </div>
 
-    <q-separator vertical color="blue-1" size="2px" />
-
     <div class="col-7">
-      <KakaoMap />
       <MyPageTab />
     </div>
   </q-page>
