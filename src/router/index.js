@@ -7,7 +7,8 @@ import LoginView from '../views/LoginView.vue';
 import SignupView from '../views/SignupView.vue';
 import PlanDetailView from '../views/PlanDetailView.vue';
 import MyPageView from '../views/MyPageView.vue';
-import planRegistView from '../views/PlanRegistView.vue';
+import PlanRegistView from '../views/PlanRegistView.vue';
+import PlanEditView from '../views/PlanEditView.vue';
 
 const routes = [
   {
@@ -48,7 +49,12 @@ const routes = [
   {
     path: '/plans/regist',
     name: 'planRegist',
-    component: planRegistView,
+    component: PlanRegistView,
+  },
+  {
+    path: '/plans/edit/:planId',
+    name: 'planEdit',
+    component: PlanEditView,
   },
 ];
 
