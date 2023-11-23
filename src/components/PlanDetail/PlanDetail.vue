@@ -1,8 +1,13 @@
 <script setup>
-import PlanDetailList from './PlanDetailList.vue';
-
 import { ref, onMounted, inject } from 'vue';
+import { storeToRefs } from 'pinia';
 import axios from 'axios';
+
+import PlanDetailList from './PlanDetailList.vue';
+import { useMemberStore } from '@/stores/member';
+
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
 
 const { plan } = history.state;
 const attractionList = inject('attractionList');
@@ -26,6 +31,10 @@ const getPlanWriterInfo = async () => {
   planWriterInfo.value = await data.userInfo;
 };
 
+const bookmarkAddHandler = () => {
+  axios.post(`${BASE_URL}/plans/${plan.id}/bookmark?userId=${userInfo.value.id}`);
+}
+
 onMounted(() => {
   getPlanDetailList();
   getPlanWriterInfo();
@@ -38,6 +47,7 @@ onMounted(() => {
       <q-icon
         name="bookmark"
         class="text-h4 bookmark absolute-top-right z-top"
+        @click="bookmarkAddHandler"
       />
       <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
         <div class="text-h5 absolute-bottom text-left">{{ plan.title }}</div>
