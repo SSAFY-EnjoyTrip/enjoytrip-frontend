@@ -1,6 +1,13 @@
 <script setup>
+import { ref, provide } from 'vue';
+
 import KakaoMap from '../components/KakaoMap/KakaoMap.vue';
 import PlanDetail from '../components/PlanDetail/PlanDetail.vue';
+
+const attractionList = ref([]);
+
+provide('attractionList', attractionList);
+provide('parentView', 'PlanDetailView');
 </script>
 
 <template>
