@@ -1,11 +1,17 @@
 <script setup>
+import { inject } from 'vue';
 import PlanDetailListItem from './PlanDetailListItem.vue';
+
+const attractionList = inject('attractionList');
 </script>
 
 <template>
-  <PlanDetailListItem v-for="n in 5" :key="n"/>
+  <div class="text-h5 q-mt-xl q-mb-lg">관광지 목록</div>
+  <PlanDetailListItem
+    v-for="attraction in attractionList"
+    :key="attraction.contentId"
+    :attraction="attraction"
+  />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
