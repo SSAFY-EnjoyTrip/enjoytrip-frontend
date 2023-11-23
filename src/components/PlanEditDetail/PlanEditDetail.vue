@@ -13,6 +13,8 @@ const memberStore = useMemberStore();
 const { userInfo } = storeToRefs(memberStore);
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const UNSPLASH_BASE_URL = import.meta.env.VITE_UNSPLASH_BASE_URL;
+const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
 const { plan } = history.state;
 
@@ -40,12 +42,30 @@ const editPlanHandler = async () => {
     router.push({ name: 'mypage' });
   }
 };
+
+const changeImageHandler = async () => {
+  const res = await axios.get(
+    `${UNSPLASH_BASE_URL}/?topic=nature&client_id=${UNSPLASH_KEY}`
+  );
+  const data = await res.data;
+
+  img.value = data.urls.full;
+};
 </script>
 
 <template>
   <div style="overflow: auto; max-height: 100vh">
     <q-card class="plan-img">
-      <q-img src="https://source.unsplash.com/random/?trip">
+      <q-img :src="img">
+        <div class="absolute-top-left toggle">
+          <q-icon
+          name="change_circle"
+          class="cursor-pointer"
+          size="30px"
+          color="grey"
+          @click="changeImageHandler"
+        />
+        </div>
         <div class="absolute-top-right toggle">
           <q-toggle v-model="isPrivate" icon="lock" color="yellow" />
         </div>
