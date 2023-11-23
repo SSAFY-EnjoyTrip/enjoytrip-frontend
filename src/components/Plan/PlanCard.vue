@@ -28,14 +28,14 @@ const viewDetailHandler = () => {
           color="red"
           class="q-mr-xs"
         />
-        {{ plan.likeCount }}
+        <!-- {{ plan.likeCount }} -->
       </div>
     </q-img>
 
     <q-card-section>
-      <div class="text-h5 q-mt-sm q-mb-xs">{{ plan.title }}</div>
+      <!-- <div class="text-h5 q-mt-sm q-mb-xs">{{ plan.title }}</div> -->
       <div class="text-caption text-grey">
-        {{ plan.content }}
+        <!-- {{ plan.content }} -->
       </div>
     </q-card-section>
   </q-card>
