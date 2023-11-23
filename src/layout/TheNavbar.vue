@@ -25,7 +25,8 @@ const visibleMenuList = computed(() => {
 const logoutHandler = async () => {
   await userLogout(userInfo.value.id);
   changeMenuState();
-  await router.push('/');
+  router.push('/');
+  router.go(0);
 };
 </script>
 
