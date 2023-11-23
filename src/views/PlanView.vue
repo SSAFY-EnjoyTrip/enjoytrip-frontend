@@ -1,11 +1,33 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import axios from 'axios';
+
+import { useMemberStore } from '../stores/member';
 
 import PlanSearch from '../components/Plan/PlanSearch.vue';
 import PlanCard from '../components/Plan/PlanCard.vue';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
 const options = ref(['최신순', '좋아요순']);
 const model = ref(options.value[0]);
+
+const planList = ref([]);
+
+const getPlanList = async () => {
+  const userId = userInfo.value?.id ?? 0;
+  const res = await axios.get(`${BASE_URL}/plans?userId=${userId}`);
+
+  planList.value = res.data;
+};
+
+onMounted(async () => {
+  await getPlanList();
+});
 </script>
 
 <template>
@@ -13,21 +35,15 @@ const model = ref(options.value[0]);
     <div class="text-h5 q-my-lg">플랜을 검색해보세요</div>
     <PlanSearch />
 
-    <div class="q-my-xl">
+    <!-- <div class="q-my-xl">
       <div class="text-h5">Top Weekly</div>
       <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
-      </div>
-      <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
+        <PlanCard class="col" v-for="plan in planList" :key="plan.id" :plan=plan />
       </div>
     </div>
 
     <div class="q-my-xl">
       <div class="text-h5">Top Monthly</div>
-      <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
-      </div>
       <div class="row">
         <PlanCard class="col" v-for="n in 4" :key="n" />
       </div>
@@ -38,10 +54,7 @@ const model = ref(options.value[0]);
       <div class="row">
         <PlanCard class="col" v-for="n in 4" :key="n" />
       </div>
-      <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
-      </div>
-    </div>
+    </div> -->
 
     <div class="q-my-xl">
       <div class="row">
@@ -57,7 +70,7 @@ const model = ref(options.value[0]);
       </div>
       <div class="row">
         <div class="row">
-          <PlanCard class="col" v-for="n in 4" :key="n" />
+          <PlanCard class="col" v-for="plan in planList" :key="plan.id" :plan="plan" />
         </div>
       </div>
     </div>
