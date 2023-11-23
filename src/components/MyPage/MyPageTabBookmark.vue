@@ -12,7 +12,7 @@ const userId = userInfo.value.id;
 const bookmarkList = ref([]);
 
 const getBookmarkList = async () => {
-  const res = await axios.get(`${BASE_URL}/plans/myplan/${userId}`);
+  const res = await axios.get(`${BASE_URL}/plans/bookmark/${userId}`);
   const data = await res.data;
 
   bookmarkList.value = data;
@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="row justify-between">
-    <MyPageTabCard v-for="plan in myPlanList" :key="plan.id" :plan="plan" class="col-5 q-pa-lg" />
+    <MyPageTabCard v-for="plan in bookmarkList" :key="plan.id" :plan="plan" class="col-5 q-pa-lg" />
   </div>
 </template>
 
