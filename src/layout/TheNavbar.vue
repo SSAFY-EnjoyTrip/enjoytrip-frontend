@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router';
 const menuStore = useMenuStore();
 const memberStore = useMemberStore();
 
-const { userInfo } = storeToRefs(memberStore);
+const { userInfo, isLogin } = storeToRefs(memberStore);
 const { menuList } = storeToRefs(menuStore);
 
 const { userLogout } = memberStore;
@@ -32,14 +32,14 @@ const logoutHandler = async () => {
 
 <template>
   <q-header elevated class="bg-white text-black" height-hint="98">
-    <q-tabs align="left">
-      <q-route-tab to="/" label="EnjoyTrip" />
-      <q-space />
+    <q-tabs align="left" indicator-color="blue">
+      <q-route-tab to="/">
+        <q-icon name="gite" size="40px" color="blue-4" />
+      </q-route-tab>
 
-      <q-route-tab to="/" label="홈" />
       <q-route-tab to="/attractions" label="관광지" />
       <q-route-tab to="/plans" label="여행일정" />
-      <q-route-tab to="/plans/regist" label="Plan Regist" />
+      <q-route-tab to="/plans/regist" label="Plan Regist" v-if="isLogin" />
 
       <q-space />
 
