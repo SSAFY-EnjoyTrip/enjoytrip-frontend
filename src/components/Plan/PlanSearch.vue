@@ -1,15 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { inject } from 'vue';
 
-const keyword = ref('');
+const keyword = inject('keyword');
 </script>
 
 <template>
-  <q-input v-model="keyword" type="search" rounded outlined>
-    <template #append>
-      <q-icon name="search" class="cursor-pointer" />
-    </template>
-  </q-input>
+  <div class="row justify-center">
+    <q-input v-model="keyword" type="search" rounded outlined>
+      <template #append>
+        <q-icon name="search" class="cursor-pointer" />
+      </template>
+    </q-input>
+  </div>
 </template>
 
 <style scoped>
