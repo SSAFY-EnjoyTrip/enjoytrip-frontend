@@ -19,7 +19,7 @@ const { userLogin, getUserInfo } = memberStore;
 const { changeMenuState } = menuStore;
 
 const loginUser = ref({
-  email: 'ssafy.com',
+  email: 'ssafy@test.com',
   password: '1234',
 });
 
@@ -71,6 +71,7 @@ const login = async () => {
                 v-model="loginUser.password"
                 type="password"
                 label="비밀번호"
+                autocomplete="on"
               />
             </q-form>
           </q-card-section>
@@ -88,9 +89,7 @@ const login = async () => {
       </div>
       <div class="row flex-center q-my-lg">
         <q-tabs>
-          <q-route-tab to="">비밀번호 찾기</q-route-tab>
-          <span>|</span>
-          <q-route-tab to="">회원가입</q-route-tab>
+          <q-route-tab to="/signup">회원가입</q-route-tab>
         </q-tabs>
       </div>
     </div>

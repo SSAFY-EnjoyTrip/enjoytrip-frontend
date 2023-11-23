@@ -161,6 +161,7 @@ const onSubmit = async (e) => {
                 type="password"
                 label="비밀번호"
                 :rules="[(val) => !!val || '비밀번호를 입력해주세요.']"
+                autocomplete="on"
               />
 
               <q-input
@@ -170,6 +171,7 @@ const onSubmit = async (e) => {
                 v-model="passwordCheck"
                 type="password"
                 label="비밀번호 확인"
+                autocomplete="on"
               />
               <div class="double-check">{{ doubleCheck }}</div>
               <q-card-actions>
