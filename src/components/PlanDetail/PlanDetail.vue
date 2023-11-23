@@ -49,7 +49,7 @@ onMounted(() => {
         class="text-h4 bookmark absolute-top-right z-top"
         @click="bookmarkAddHandler"
       />
-      <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+      <q-img :src="plan.img">
         <div class="text-h5 absolute-bottom text-left">{{ plan.title }}</div>
       </q-img>
     </q-card>
@@ -57,7 +57,7 @@ onMounted(() => {
     <div class="main q-pa-lg">
       <div class="header row">
         <q-avatar size="80px" class="q-mr-md">
-          <img src="https://cdn.quasar.dev/img/avatar.png" />
+          <q-img :src="`/src/assets/profiles/${planWriterInfo.profileImg}.svg`" class="full-height" />
         </q-avatar>
         <div class="q-mr-xl">
           <div class="name text-h5">{{ planWriterInfo.nickname }}</div>
