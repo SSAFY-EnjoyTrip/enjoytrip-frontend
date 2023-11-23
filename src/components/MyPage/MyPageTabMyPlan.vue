@@ -16,19 +16,23 @@ const getMyPlanList = async () => {
   const data = await res.data;
 
   myPlanList.value = data;
-}
+};
 
 onMounted(() => {
   getMyPlanList();
-})
+});
 </script>
 
 <template>
   <div class="row justify-around">
-    <MyPageTabCard v-for="plan in myPlanList" :key="plan.id" :plan="plan" class="col-5 q-pa-lg" />
+    <MyPageTabCard
+      v-for="plan in myPlanList"
+      :key="plan.id"
+      :plan="plan"
+      class="col-5 q-pa-lg"
+      type="myplan"
+    />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
