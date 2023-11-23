@@ -1,29 +1,36 @@
 <script setup>
-import { ref } from 'vue';
+const props = defineProps({
+  attraction: Object,
+});
 
-import PlanDetailListItemPlace from './PlanDetailListItemPlace.vue';
-
-const isExpanded = ref(true);
+const attraction = props.attraction;
 </script>
 
 <template>
-  <div>
-    <q-expansion-item>
-      <template v-slot:header="{ isExpanded }">
-        <q-item-section class="text-h5 title">title</q-item-section>
-      </template>
-      <q-separator class="q-my-sm" />
-      <div class="text-h6 description">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. A eius
-        molestias iste neque aliquam. Molestiae distinctio blanditiis atque id
-        ea eius veritatis magni velit rem dicta itaque, illum modi doloremque.
+  <div class="q-mb-lg">
+    <div class="q-mb-md row align-center">
+      <q-icon name="place" class="marker" />
+      <span class="text-h5">{{ attraction.title }}</span>
+      <q-space />
+    </div>
+    <div class="row">
+      <div class="col-8">
+        {{ attraction.addr1 }}
       </div>
-      <q-separator class="q-my-md" />
-
-      <PlanDetailListItemPlace />
-    </q-expansion-item>
+      <div class="col-4">
+        <q-img
+          fit="cover"
+          :src="attraction.firstImage || '/src/assets/altImage.png'"
+        />
+      </div>
+    </div>
+    <q-separator class="q-mt-sm"/>
   </div>
 </template>
 
 <style scoped>
+.marker {
+  font-size: 32px;
+  color: rgba(0, 0, 0, 0.5);
+}
 </style>
