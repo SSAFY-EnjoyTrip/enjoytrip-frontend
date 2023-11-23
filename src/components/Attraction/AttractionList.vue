@@ -11,7 +11,7 @@ const getAttractions = inject('getAttractions');
 </script>
 
 <template>  
-  <div class="row q-col-gutter-lg">
+  <div class="row q-col-gutter-lg q-mx-lg">
     <div
       v-for="attraction in attractions"
       :key="attraction.contentId"
