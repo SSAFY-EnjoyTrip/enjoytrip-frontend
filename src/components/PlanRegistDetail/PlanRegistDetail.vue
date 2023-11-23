@@ -18,6 +18,8 @@ const attractionList = inject('attractionList');
 const title = ref('제목을 입력하세요');
 const content = ref('');
 const img = ref('image');
+// public: 1, private: 0
+const isPrivate = ref(false);
 
 const savePlanHandler = async () => {
   const res = await axios.post(`${BASE_URL}/plans`, {
@@ -26,21 +28,24 @@ const savePlanHandler = async () => {
     img: img.value,
     userId: userInfo.value.id,
     attractionList: attractionList.value,
+    isPublic: isPrivate.value ? 0 : 1,
   });
 
   const { status } = res;
 
-  if(status === HttpStatusCode.Ok) {
+  if (status === HttpStatusCode.Ok) {
     router.push({ name: 'plans' });
   }
 };
-
 </script>
 
 <template>
   <div style="overflow: auto; max-height: 100vh">
     <q-card class="plan-img">
       <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+        <div class="absolute-top-right toggle">
+          <q-toggle v-model="isPrivate" icon="lock" color="yellow" />
+        </div>
         <div class="absolute-bottom">
           <q-input class="text-h5" borderless v-model="title" dark />
         </div>
@@ -59,7 +64,12 @@ const savePlanHandler = async () => {
         <PlanRegistDetailList />
       </div>
 
-      <q-btn label="저장하기" color="primary" class="full-width q-my-lg" @click="savePlanHandler" />
+      <q-btn
+        label="저장하기"
+        color="primary"
+        class="full-width q-my-lg"
+        @click="savePlanHandler"
+      />
     </div>
   </div>
 </template>
@@ -76,5 +86,8 @@ const savePlanHandler = async () => {
 .bookmark:hover {
   color: white;
   cursor: pointer;
+}
+.toggle {
+  background: none;
 }
 </style>
