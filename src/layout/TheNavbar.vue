@@ -30,11 +30,14 @@ const logoutHandler = async () => {
 </script>
 
 <template>
-  <q-header elevated class="bg-primary text-white" height-hint="98">
+  <q-header elevated class="bg-white text-black" height-hint="98">
     <q-tabs align="left">
-      <q-route-tab to="/" label="Home" />
-      <q-route-tab to="/attractions" label="Attractions" />
-      <q-route-tab to="/plans" label="Plans" />
+      <q-route-tab to="/" label="EnjoyTrip" />
+      <q-space />
+
+      <q-route-tab to="/" label="홈" />
+      <q-route-tab to="/attractions" label="관광지" />
+      <q-route-tab to="/plans" label="여행일정" />
       <q-route-tab to="/plans/regist" label="Plan Regist" />
 
       <q-space />
