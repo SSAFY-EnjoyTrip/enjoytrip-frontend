@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import axios from 'axios';
 
@@ -17,6 +17,7 @@ const options = ref(['최신순', '좋아요순']);
 const model = ref(options.value[0]);
 
 const planList = ref([]);
+const keyword = ref('');
 
 const getPlanList = async () => {
   const userId = userInfo.value?.id ?? 0;
@@ -28,37 +29,38 @@ const getPlanList = async () => {
 onMounted(async () => {
   await getPlanList();
 });
+
+const filteredPlanList = computed(() => {
+  const keywordFilteredPlanList = planList.value.filter((plan) =>
+    plan.title.includes(keyword.value)
+  );
+
+  if(model.value === '최신순') {
+    keywordFilteredPlanList.sort((a, b) => {
+      return new Date(b.updatedAt) - new Date(a.updatedAt);
+    });
+  }
+  else if(model.value === '좋아요순') {
+    keywordFilteredPlanList.sort((a, b) => {
+      return b.likeCount - a.likeCount;
+    });
+  }
+
+  return keywordFilteredPlanList;
+});
+
+provide('keyword', keyword);
 </script>
 
 <template>
   <q-page class="q-pa-xl">
-    <div class="text-h5 q-my-lg">플랜을 검색해보세요</div>
+    <div class="text-h5 q-my-lg row justify-center">
+      여행계획을 검색해보세요
+    </div>
     <PlanSearch />
 
-    <!-- <div class="q-my-xl">
-      <div class="text-h5">Top Weekly</div>
-      <div class="row">
-        <PlanCard class="col" v-for="plan in planList" :key="plan.id" :plan=plan />
-      </div>
-    </div>
-
-    <div class="q-my-xl">
-      <div class="text-h5">Top Monthly</div>
-      <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
-      </div>
-    </div>
-
-    <div class="q-my-xl">
-      <div class="text-h5">Top Yearly</div>
-      <div class="row">
-        <PlanCard class="col" v-for="n in 4" :key="n" />
-      </div>
-    </div> -->
-
     <div class="q-my-xl">
       <div class="row">
-        <div class="text-h5">Plans</div>
         <q-space />
         <q-select
           outlined
@@ -68,21 +70,19 @@ onMounted(async () => {
           behavior="menu"
         />
       </div>
-      <div class="row">
-        <div class="row">
-          <PlanCard class="col" v-for="plan in planList" :key="plan.id" :plan="plan" />
-        </div>
+      <div class="row q-mt-lg q-col-gutter-xl">
+        <PlanCard
+          class="col-xl-3 col-lg-4 col-sm-6 col-xs-12"
+          v-for="plan in filteredPlanList"
+          :key="plan.id"
+          :plan="plan"
+        />
       </div>
     </div>
   </q-page>
 </template>
 
 <style scoped>
-.q-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 .q-select {
   width: 200px;
 }
