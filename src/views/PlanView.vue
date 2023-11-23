@@ -31,6 +31,10 @@ onMounted(async () => {
 });
 
 const filteredPlanList = computed(() => {
+  if(planList.value.length <= 0) {
+    return [];
+  }
+  
   const keywordFilteredPlanList = planList.value.filter((plan) =>
     plan.title.includes(keyword.value)
   );
