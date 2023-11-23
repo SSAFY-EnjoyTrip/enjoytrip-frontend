@@ -8,13 +8,18 @@ const props = defineProps({
 const plan = props.plan;
 
 const router = useRouter();
-const showDetailHandler = () => {
-
-}
+const viewDetailHandler = () => {
+  router.push({
+    path: `/plans/${props.plan.id}`,
+    state: {
+      plan: { ...props.plan },
+    },
+  });
+};
 </script>
 
 <template>
-  <q-card class="q-mb-lg">
+  <q-card class="q-mb-lg" @click="viewDetailHandler">
     <div class="q-mb-md row align-center">
       <q-icon name="place" class="marker" />
       <span class="text-h5">{{ plan.title }}</span>
