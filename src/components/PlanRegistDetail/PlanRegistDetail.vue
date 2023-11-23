@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import axios, { HttpStatusCode } from 'axios';
 
@@ -13,11 +13,13 @@ const memberStore = useMemberStore();
 const { userInfo } = storeToRefs(memberStore);
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const UNSPLASH_BASE_URL = import.meta.env.VITE_UNSPLASH_BASE_URL;
+const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
 const attractionList = inject('attractionList');
 const title = ref('제목을 입력하세요');
 const content = ref('');
-const img = ref('image');
+const img = ref(null);
 // public: 1, private: 0
 const isPrivate = ref(false);
 
@@ -37,12 +39,35 @@ const savePlanHandler = async () => {
     router.push({ name: 'plans' });
   }
 };
+
+const changeImageHandler = async () => {
+  const res = await axios.get(
+    `${UNSPLASH_BASE_URL}/?topic=nature&client_id=${UNSPLASH_KEY}`
+  );
+  const data = await res.data;
+
+  img.value = data.urls.full;
+};
+
+onMounted(async () => {
+  changeImageHandler();
+});
 </script>
 
 <template>
   <div style="overflow: auto; max-height: 100vh">
     <q-card class="plan-img">
-      <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+      <q-img :src="img">
+        <div class="absolute-top-left toggle">
+          <q-icon
+          name="change_circle"
+          class="cursor-pointer"
+          size="30px"
+          color="grey"
+          @click="changeImageHandler"
+        />
+        </div>
+        
         <div class="absolute-top-right toggle">
           <q-toggle v-model="isPrivate" icon="lock" color="yellow" />
         </div>
