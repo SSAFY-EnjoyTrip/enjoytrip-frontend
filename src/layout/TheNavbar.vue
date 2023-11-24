@@ -25,7 +25,7 @@ const visibleMenuList = computed(() => {
 const logoutHandler = async () => {
   await userLogout(userInfo.value.id);
   changeMenuState();
-  router.push('/');
+  await router.push('/');
   router.go(0);
 };
 </script>
@@ -39,13 +39,13 @@ const logoutHandler = async () => {
 
       <q-route-tab to="/attractions" label="관광지" />
       <q-route-tab to="/plans" label="여행일정" />
-      <q-route-tab to="/plans/regist" label="Plan Regist" v-if="isLogin" />
+      <q-route-tab to="/plans/regist" label="플랜 등록" v-if="isLogin" />
 
       <q-space />
 
       <div class="row">
         <template v-for="menu in visibleMenuList" :key="menu.name">
-          <template v-if="menu.name === 'logout'">
+          <template v-if="menu.name === '로그아웃'">
             <q-route-tab
               :key="menu.name"
               :label="menu.name"
