@@ -21,7 +21,7 @@ const viewDetailHandler = () => {
 
 <template>
   <q-card @click="viewDetailHandler">
-    <q-img :src="plan.img" loading="eager">
+    <q-img :src="plan.img" loading="lazy">
       <div class="absolute-bottom text-subtitle2 text-center">
         {{ plan.title }}
       </div>

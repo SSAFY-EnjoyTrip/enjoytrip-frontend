@@ -20,7 +20,7 @@ const viewDetailHandler = () => {
 <template>
   <div>
     <q-card flat bordered @click="viewDetailHandler">
-      <q-img :src="plan.img" fit="cover" loading="eager">
+      <q-img :src="plan.img" fit="cover" loading="lazy">
         <div class="absolute-bottom">
           <q-icon
             name="favorite_border"
