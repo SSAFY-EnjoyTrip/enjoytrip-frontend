@@ -36,7 +36,8 @@ const login = async () => {
       color: 'primary',
       timeout: 1000,
     });
-    router.push('/');
+    await router.push('/');
+    router.go(0);
   }
 };
 </script>
