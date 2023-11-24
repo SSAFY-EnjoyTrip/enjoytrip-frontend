@@ -84,13 +84,12 @@ const moveLoginHandler = () => {
 
 onMounted(() => {
   console.log(isLogin.value);
-  scrollSection();
-  getPopularPlanList();
-
   if(userId) {
     getMyPlan(userId);
   }
-  
+
+  scrollSection();
+  getPopularPlanList();
   getHotPlan();
 });
 </script>
