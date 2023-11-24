@@ -1,12 +1,12 @@
 <script setup>
-import { ref, inject, onMounted } from 'vue';
+import { ref, inject } from 'vue';
 import { storeToRefs } from 'pinia';
 import axios, { HttpStatusCode } from 'axios';
 
 import { useMemberStore } from '@/stores/member';
 import router from '@/router';
 
-import PlanRegistDetailList from './PlanRegistDetailList.vue';
+import PlanEditDetailList from './PlanEditDetailList.vue';
 
 const memberStore = useMemberStore();
 
@@ -16,15 +16,18 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const UNSPLASH_BASE_URL = import.meta.env.VITE_UNSPLASH_BASE_URL;
 const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
-const attractionList = inject('attractionList');
-const title = ref('제목을 입력하세요');
-const content = ref('');
-const img = ref(null);
-// public: 1, private: 0
-const isPrivate = ref(false);
+const { plan } = history.state;
 
-const savePlanHandler = async () => {
-  const res = await axios.post(`${BASE_URL}/plans`, {
+const attractionList = inject('attractionList');
+const title = ref(plan.title);
+const content = ref(plan.content);
+const img = ref(plan.img);
+// public: 1, private: 0
+const isPrivate = ref(!plan.isPublic);
+
+const editPlanHandler = async () => {
+  const res = await axios.put(`${BASE_URL}/plans/${plan.id}`, {
+    id: plan.id,
     title: title.value,
     content: content.value,
     img: img.value,
@@ -36,7 +39,7 @@ const savePlanHandler = async () => {
   const { status } = res;
 
   if (status === HttpStatusCode.Ok) {
-    router.push({ name: 'plans' });
+    router.push({ name: 'mypage' });
   }
 };
 
@@ -48,10 +51,6 @@ const changeImageHandler = async () => {
 
   img.value = data.urls.full;
 };
-
-onMounted(async () => {
-  changeImageHandler();
-});
 </script>
 
 <template>
@@ -67,7 +66,6 @@ onMounted(async () => {
           @click="changeImageHandler"
         />
         </div>
-        
         <div class="absolute-top-right toggle">
           <q-toggle v-model="isPrivate" icon="lock" color="yellow" />
         </div>
@@ -86,14 +84,14 @@ onMounted(async () => {
       </div>
 
       <div>
-        <PlanRegistDetailList />
+        <PlanEditDetailList />
       </div>
 
       <q-btn
-        label="저장하기"
+        label="수정하기"
         color="primary"
         class="full-width q-my-lg"
-        @click="savePlanHandler"
+        @click="editPlanHandler"
       />
     </div>
   </div>

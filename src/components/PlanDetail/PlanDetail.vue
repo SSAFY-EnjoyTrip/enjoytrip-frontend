@@ -1,8 +1,13 @@
 <script setup>
-import PlanDetailList from './PlanDetailList.vue';
-
 import { ref, onMounted, inject } from 'vue';
+import { storeToRefs } from 'pinia';
 import axios from 'axios';
+
+import PlanDetailList from './PlanDetailList.vue';
+import { useMemberStore } from '@/stores/member';
+
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
 
 const { plan } = history.state;
 const attractionList = inject('attractionList');
@@ -26,6 +31,10 @@ const getPlanWriterInfo = async () => {
   planWriterInfo.value = await data.userInfo;
 };
 
+const bookmarkAddHandler = () => {
+  axios.post(`${BASE_URL}/plans/${plan.id}/bookmark?userId=${userInfo.value.id}`);
+}
+
 onMounted(() => {
   getPlanDetailList();
   getPlanWriterInfo();
@@ -38,8 +47,9 @@ onMounted(() => {
       <q-icon
         name="bookmark"
         class="text-h4 bookmark absolute-top-right z-top"
+        @click="bookmarkAddHandler"
       />
-      <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
+      <q-img :src="plan.img">
         <div class="text-h5 absolute-bottom text-left">{{ plan.title }}</div>
       </q-img>
     </q-card>
@@ -47,7 +57,7 @@ onMounted(() => {
     <div class="main q-pa-lg">
       <div class="header row">
         <q-avatar size="80px" class="q-mr-md">
-          <img src="https://cdn.quasar.dev/img/avatar.png" />
+          <q-img :src="`/src/assets/profiles/${planWriterInfo.profileImg}.svg`" class="full-height" />
         </q-avatar>
         <div class="q-mr-xl">
           <div class="name text-h5">{{ planWriterInfo.nickname }}</div>

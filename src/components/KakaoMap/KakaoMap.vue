@@ -59,7 +59,7 @@ const deleteMarkers = () => {
   markers.value = [];
 };
 
-const addMarkers = () => {
+const addMarkers = async () => {
   if (attractionList.value.length <= 0) {
     return;
   }
@@ -92,7 +92,7 @@ watch(selectedAttraction, (newAttraction) => {
 });
 
 if (parentView !== 'PlanDetailView') {
-  watch(attractionList, () => {
+  watch(attractionList, async () => {
     deleteMarkers();
     addMarkers();
     setMarkers();
@@ -111,8 +111,8 @@ onMounted(async () => {
     });
     loadMap();
 
-    if (parentView === 'PlanDetailView') {
-      addMarkers();
+    if (parentView === 'PlanDetailView' || parentView === 'PlanEditView') {
+      await addMarkers();
       setMarkers();
     }
   } catch (error) {
