@@ -37,11 +37,12 @@ const viewEditDetailHandler = (e) => {
 
 <template>
   <q-card class="q-mb-lg" @click="viewDetailHandler">
-    <div class="q-mb-md row align-center">
-      <q-icon name="place" class="marker" />
-      <span class="text-h5">{{ plan.title }}</span>
-      <q-space />
-      <q-btn v-if="type === 'myplan'" icon="edit" @click="(e) => viewEditDetailHandler(e)" class="z-top" />
+    <div class="q-mb-md row align-center justify-between">
+      <div class="col-10 ellipsis">
+        <q-icon name="place" class="marker q-mr-xs" />
+        <span class="text-h5 ellipsis q-pt-md">{{ plan.title }}</span>
+      </div>
+      <q-btn v-if="type === 'myplan'" icon="edit" @click="(e) => viewEditDetailHandler(e)" class="z-top col-1" />
     </div>
     <div class="row">
       <div class="col-7 ellipsis">
