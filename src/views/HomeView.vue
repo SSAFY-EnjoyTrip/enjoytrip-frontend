@@ -1,10 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 import { useMemberStore } from '@/stores/member';
-import PlanCard from '@/components/Plan/PlanCard.vue';
+
+// import HomePlanCard from '@/components/Home/HomePlanCard.vue';
+// import PlanCard from '@/components/Plan/PlanCard.vue';
 import axios from 'axios';
+
+const HomePlanCard = defineAsyncComponent(() => import('../components/Home/HomePlanCard.vue'));
+const PlanCard = defineAsyncComponent(() => import('../components/Plan/PlanCard.vue'));
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -14,22 +20,37 @@ const userId = userInfo.value?.id;
 
 const slide = ref(1); // 현재 슬라이드의 인덱스를 저장할 변수
 
+const topWeeklyList = ref([]);
+const topMonthlyList = ref([]);
+const topYearlyList = ref([]);
+const myPlanList = ref([]);
+const popularPlanList = ref([]);
+
 const getMyPlan = async () => {
   const res = await axios.get(`${BASE_URL}/plans/myplan/${userId}`);
-  console.log('MyPlan', res.data);
+  const data = await res.data;
+
+  console.log(getMyPlan.value);
+
+  myPlanList.value = data;
 };
 
 const getHotPlan = async () => {
   const res = await axios.get(`${BASE_URL}/plans/hotplan`);
-  console.log('HotPlan', res.data);
+
+  console.log(res.data);
+  topWeeklyList.value = res.data.topWeekly;
+  topMonthlyList.value = res.data.topMonthly;
+  topYearlyList.value = res.data.topYearly;
 };
 
-onMounted(() => {
-  scrollSection();
-  // getMyPlan(userId);
-  // getBookmark(userId);
-  getHotPlan();
-});
+const getPopularPlanList = async () => {
+  const userId = userInfo.value?.id ?? 0;
+  const res = await axios.get(`${BASE_URL}/plans?userId=${userId}`);
+  const data = await res.data;
+
+  popularPlanList.value = data.sort((a, b) => b.likeCount - a.likeCount).slice(0, 5);
+}
 
 function scrollSection() {
   const sections = document.querySelectorAll('.section');
@@ -55,6 +76,23 @@ function scrollSection() {
     });
   });
 }
+
+const router = useRouter();
+const moveLoginHandler = () => {
+  router.push('/login');
+}
+
+onMounted(() => {
+  console.log(isLogin.value);
+  scrollSection();
+  getPopularPlanList();
+
+  if(userId) {
+    getMyPlan(userId);
+  }
+  
+  getHotPlan();
+});
 </script>
 
 <template>
@@ -72,32 +110,13 @@ function scrollSection() {
             animated
             control-color="black"
             navigation
-            padding
             arrows
             height="400px"
             class="bg-grey-1 shadow-2 rounded-borders"
           >
-            <q-carousel-slide :name="1" class="column no-wrap">
-              <div
-                class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-              >
-                <PlanCard class="col" v-for="n in 4" :key="n" />
-              </div>
-            </q-carousel-slide>
-            <q-carousel-slide :name="2" class="column no-wrap">
-              <div
-                class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-              >
-                <PlanCard class="col" v-for="n in 4" :key="n" />
-              </div>
-            </q-carousel-slide>
-            <q-carousel-slide :name="3" class="column no-wrap">
-              <div
-                class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-              >
-                <PlanCard class="col" v-for="n in 4" :key="n" />
-              </div>
-            </q-carousel-slide>
+          <q-carousel-slide v-for="(plan, index) in myPlanList" :name="index + 1" :key="plan.id">
+            <PlanCard class="col" :plan="plan" />
+          </q-carousel-slide>
           </q-carousel>
         </div>
       </div>
@@ -106,48 +125,45 @@ function scrollSection() {
     <!-- hot plan -->
     <div class="section hot-plan">
       <div class="content-wrap">
-        <div class="text-h4 q-mb-md">인기 여행</div>
+        <div class="text-h4 q-mb-md">기간별 인기 여행</div>
         <a href="#"></a>
         <div class="q-mb-lg">
-          <div class="text-h6">Top Weekly</div>
+          <div class="text-h6">주간 TOP 5</div>
           <div
             class="row fit justify-start items-center q-gutter-sm q-col-gutter no-wrap"
           >
-            <q-card class="my-card" v-for="n in 5" :key="n">
-              <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-                <div class="absolute-bottom text-subtitle2 text-center">
-                  Title
-                </div>
-              </q-img>
-            </q-card>
+            <HomePlanCard
+              class="col"
+              v-for="plan in topWeeklyList"
+              :key="plan.id"
+              :plan="plan"
+            />
           </div>
         </div>
         <div class="q-mb-lg">
-          <div class="text-h6">Top Monthly</div>
+          <div class="text-h6">월간 TOP 5</div>
           <div
             class="row fit justify-start items-center q-gutter-sm q-col-gutter no-wrap"
           >
-            <q-card class="my-card" v-for="n in 5" :key="n">
-              <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-                <div class="absolute-bottom text-subtitle2 text-center">
-                  Title
-                </div>
-              </q-img>
-            </q-card>
+            <HomePlanCard
+              class="col"
+              v-for="plan in topMonthlyList"
+              :key="plan.id"
+              :plan="plan"
+            />
           </div>
         </div>
         <div class="q-mb-lg">
-          <div class="text-h6">Top Yearly</div>
+          <div class="text-h6">연간 TOP 5</div>
           <div
             class="row fit justify-start items-center q-gutter-sm q-col-gutter no-wrap"
           >
-            <q-card class="my-card" v-for="n in 5" :key="n">
-              <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-                <div class="absolute-bottom text-subtitle2 text-center">
-                  Title
-                </div>
-              </q-img>
-            </q-card>
+            <HomePlanCard
+              class="col"
+              v-for="plan in topYearlyList"
+              :key="plan.id"
+              :plan="plan"
+            />
           </div>
         </div>
       </div>
@@ -188,13 +204,13 @@ function scrollSection() {
     <!-- hot place -->
     <div class="section hot-place">
       <div class="content-wrap">
-        <div class="text-h4 q-mb-md">인기 여행 계획</div>
+        <div class="text-h4 q-mb-lg">인기 여행 계획</div>
         <p class="text-h6 desc">
-          기간별 인기 여행 계획을 살펴보세요. 다른 여행자들과 아이디어를 나누며
+          인기 여행 계획을 살펴보세요. 다른 여행자들과 아이디어를 나누며
           <br />한국의 숨은 관광지를 발견하고 새로운 경험과 추억을 만들어보세요.
         </p>
-        <div class="row">
-          <PlanCard class="col" v-for="n in 5" :key="n" />
+        <div class="row q-col-gutter-lg q-mt-sm">
+          <PlanCard class="col" v-for="plan in popularPlanList" :key="plan.id" :plan="plan" />
         </div>
       </div>
     </div>
@@ -208,7 +224,7 @@ function scrollSection() {
             새로운 여정을 시작할 준비가 되셨나요? <br />
             <b>EnjoyTrip</b>과 함께 새로운 방법을 경험하세요!
           </div>
-          <q-btn color="primary" label="Start Planning" />
+          <q-btn color="primary" label="시작하기" @click="moveLoginHandler" />
         </div>
       </div>
     </div>
@@ -280,7 +296,7 @@ div.section.main {
   width: 1200px;
   height: 500px;
   display: flex;
-  padding: 50px;
+  /* padding: 50px; */
 }
 
 .section.plan .content-wrap {
