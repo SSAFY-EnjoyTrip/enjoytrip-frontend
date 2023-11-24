@@ -44,13 +44,13 @@ const viewEditDetailHandler = (e) => {
       <q-btn v-if="type === 'myplan'" icon="edit" @click="(e) => viewEditDetailHandler(e)" class="z-top" />
     </div>
     <div class="row">
-      <div class="col-8 ellipsis">
+      <div class="col-7 ellipsis">
         {{ plan.content }}
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <q-img
           fit="cover"
-          :src="'/src/assets/altImage.png'"
+          :src="plan.img"
         />
       </div>
     </div>
@@ -65,5 +65,8 @@ const viewEditDetailHandler = (e) => {
 }
 .q-card {
   cursor: pointer;
+}
+.q-img {
+  height: 100px;
 }
 </style>
