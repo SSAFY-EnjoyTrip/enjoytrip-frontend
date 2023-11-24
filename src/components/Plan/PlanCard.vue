@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
@@ -19,30 +18,35 @@ const viewDetailHandler = () => {
 </script>
 
 <template>
-  <q-card class="q-ma-md" flat bordered @click="viewDetailHandler">
-    <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
-      <div class="absolute-bottom">
-        <q-icon
-          name="favorite_border"
-          size="20px"
-          color="red"
-          class="q-mr-xs"
-        />
-        <!-- {{ plan.likeCount }} -->
-      </div>
-    </q-img>
+  <div>
+    <q-card flat bordered @click="viewDetailHandler">
+      <q-img :src="plan.img" fit="cover" loading="eager">
+        <div class="absolute-bottom">
+          <q-icon
+            name="favorite_border"
+            size="20px"
+            color="red"
+            class="q-mr-xs"
+          />
+          {{ plan.likeCount }}
+        </div>
+      </q-img>
 
-    <q-card-section>
-      <!-- <div class="text-h5 q-mt-sm q-mb-xs">{{ plan.title }}</div> -->
-      <div class="text-caption text-grey">
-        <!-- {{ plan.content }} -->
-      </div>
-    </q-card-section>
-  </q-card>
+      <q-card-section>
+        <div class="text-h5 q-mt-sm q-mb-xs ellipsis">{{ plan.title }}</div>
+        <div class="text-caption text-grey ellipsis">
+          {{ plan.content || '내용 없음' }}
+        </div>
+        <div>
+          {{ plan.updatedAt }}
+        </div>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <style scoped>
-.q-card {
-  max-width: 300px;
+.q-img {
+  height: 250px;
 }
 </style>
